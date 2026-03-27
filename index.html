@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Home</title>
+<link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.center{width:100%;max-width:700px;padding:40px 24px;display:flex;flex-direction:column;align-items:center;gap:0}
+.logo{font-size:4.5rem;font-weight:300;letter-spacing:-0.04em;color:#fff;margin-bottom:6px}
+.underline{width:60px;height:2px;background:#fff;margin-bottom:40px;border-radius:2px}
+.searchbar{width:100%;display:flex;align-items:center;background:transparent;border:1.5px solid #2a2a2a;border-radius:12px;padding:0 16px;height:52px;gap:12px;transition:border-color .2s;margin-bottom:32px}
+.searchbar:focus-within{border-color:#555}
+.searchbar svg{color:#555;flex-shrink:0}
+.searchbar input{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:0.95rem;font-family:'Inter',sans-serif;font-weight:400}
+.searchbar input::placeholder{color:#555}
+.ddg{display:flex;align-items:center;gap:6px;color:#777;font-size:0.78rem;flex-shrink:0;cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid #222;user-select:none}
+.ddg:hover{border-color:#444;color:#aaa}
+.shortcuts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.sc{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:12px;transition:background .15s;min-width:70px;background:none;border:none;font-family:inherit;color:inherit}
+.sc:hover{background:#111}
+.sc-icon{width:52px;height:52px;border-radius:14px;background:#111;border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.sc-label{font-size:0.72rem;color:#777;font-weight:400;text-align:center}
+.sc:hover .sc-label{color:#aaa}
+</style>
+</head>
+<body>
+<div class="center">
+  <h1 class="logo">ben's</h1>
+  <div class="underline"></div>
+  <form class="searchbar" id="searchForm">
+    <label for="q" style="display:none">Search</label>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="q" type="text" placeholder="Search DuckDuckGo or type a URL"/>
+    <div class="ddg" title="Search provider">DuckDuckGo ▾</div>
+  </form>
+  <div class="shortcuts" role="group" aria-label="Quick links">
+    <button class="sc" data-url="https://www.youtube.com" aria-label="YouTube">
+      <div class="sc-icon">▶</div>
+      <div class="sc-label">YouTube</div>
+    </button>
+    <button class="sc" data-url="https://www.tiktok.com" aria-label="TikTok">
+      <div class="sc-icon">🎵</div>
+      <div class="sc-label">TikTok</div>
+    </button>
+    <button class="sc" data-url="https://discord.com/app" aria-label="Discord">
+      <div class="sc-icon">💬</div>
+      <div class="sc-label">Discord</div>
+    </button>
+    <button class="sc" data-url="https://www.instagram.com" aria-label="Instagram">
+      <div class="sc-icon">📷</div>
+      <div class="sc-label">Instagram</div>
+    </button>
+    <button class="sc" data-url="https://open.spotify.com" aria-label="Spotify">
+      <div class="sc-icon">🎧</div>
+      <div class="sc-label">Spotify</div>
+    </button>
+    <button class="sc" data-url="https://www.roblox.com" aria-label="Roblox">
+      <div class="sc-icon">🎮</div>
+      <div class="sc-label">Roblox</div>
+    </button>
+    <button class="sc" data-url="https://now.gg/play" aria-label="now.gg">
+      <div class="sc-icon">☁️</div>
+      <div class="sc-label">now.gg</div>
+    </button>
+    <button class="sc" data-url="https://www.reddit.com" aria-label="Reddit">
+      <div class="sc-icon">🔴</div>
+      <div class="sc-label">Reddit</div>
+    </button>
+    <button class="sc" data-url="https://www.netflix.com" aria-label="Netflix">
+      <div class="sc-icon">🎬</div>
+      <div class="sc-label">Netflix</div>
+    </button>
+    <button class="sc" data-url="https://www.twitch.tv" aria-label="Twitch">
+      <div class="sc-icon">🟣</div>
+      <div class="sc-label">Twitch</div>
+    </button>
+  </div>
+</div>
+<script>
+// Handle search form submission
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const value = document.getElementById('q').value.trim();
+  if (!value) return;
+  
+  let url;
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    url = value;
+  } else if (isValidDomain(value)) {
+    url = 'https://' + value;
+  } else {
+    url = 'https://duckduckgo.com/?q=' + encodeURIComponent(value) + '&ia=web';
+  }
+  window.location.href = url;
+});
+
+// Handle shortcut buttons
+document.querySelectorAll('.sc').forEach(button => {
+  button.addEventListener('click', function() {
+    window.location.href = this.dataset.url;
+  });
+});
+
+// Improved URL validation
+function isValidDomain(str) {
+  // Check if it looks like a domain (has a dot, no spaces, basic format)
+  if (str.indexOf('.') === -1 || str.indexOf(' ') !== -1) return false;
+  // Check for valid domain pattern
+  return /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/.test(str);
+}
+</script>
+</body>
+</html>
